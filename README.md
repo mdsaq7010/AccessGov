@@ -1,50 +1,147 @@
-# Welcome to your Expo app 👋
+# ShipGovApp
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+ShipGovApp is a college prototype for India-focused government service access.
 
-## Get started
+Current stack:
 
-1. Install dependencies
+- React Native + Expo
+- React Navigation (runtime navigation)
+- Supabase (database + prototype auth data)
+- Gemini API for GovGuide AI assistant
 
-   ```bash
-   npm install
-   ```
+## Prototype Scope
 
-2. Start the app
+The app supports two user types:
 
-   ```bash
-   npx expo start
-   ```
+- Citizen flow: login with OTP, browse departments/services, access AI assistant
+- Official flow: login with official credentials, view dashboard, access AI assistant
 
-In the output, you'll find options to open the app in a
+This is intentionally prototype-first and optimized for feature delivery.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Runtime entry and providers: App.js, index.js
+- Navigation: src/navigation/RootNavigator.js
+- Auth and API: src/context/, src/api/
+- Screens: src/screens/
+- Supabase schema/seed: supabase/setup.sql
 
-## Get a fresh project
+Note: The app folder contains Expo starter template files. Current runtime flow is App.js + src/navigation/RootNavigator.js.
 
-When you're ready, run:
+## Environment Setup
+
+1. Copy .env.example to .env
+2. Fill the values in .env:
+
+- EXPO_PUBLIC_SUPABASE_URL
+- EXPO_PUBLIC_SUPABASE_ANON_KEY
+- EXPO_PUBLIC_GEMINI_API_KEY
+
+Optional demo-only values:
+
+- EXPO_PUBLIC_DEMO_ADMIN_EMAIL
+- EXPO_PUBLIC_DEMO_ADMIN_PASSWORD
+- EXPO_PUBLIC_DEMO_OFFICER_EMAIL
+- EXPO_PUBLIC_DEMO_OFFICER_PASSWORD
+
+Security notes:
+
+- Never commit real API keys or passwords.
+- Keep only placeholder values in .env.example.
+- Rotate any key that was previously exposed in local files or screenshots.
+
+## Run Locally
+
+1. Install dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Start Expo:
 
-## Learn more
+```bash
+npm run start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Open on Android, iOS, or Web from the Expo prompt.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Useful Commands
 
-## Join the community
+```bash
+npm run lint
+npm run android
+npm run android:local
+npm run android:gradle:debug
+npm run android:install:debug
+npm run build:apk
+npm run build:aab
+npm run ios
+npm run web
+npm run web:fixed
+```
 
-Join our community of developers creating universal apps.
+## Android Build (APK/AAB)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is already configured for Android with package id `com.shipgov.app`.
+
+1. Login to Expo/EAS:
+
+```bash
+npx eas login
+```
+
+2. Build installable APK (for testing on devices):
+
+```bash
+npm run build:apk
+```
+
+3. Build production AAB (for Play Store upload):
+
+```bash
+npm run build:aab
+```
+
+4. For local Android native run (Android Studio/SDK required):
+
+```bash
+npm run android:local
+```
+
+## Run In Android Studio
+
+Native Android project is generated under [android/build.gradle](android/build.gradle) and is ready for Android Studio.
+
+1. Open Android Studio -> Open project -> select the [android](android) folder.
+2. Wait for Gradle sync.
+3. Ensure Gradle JDK is set to Android Studio JBR (Settings -> Build Tools -> Gradle -> Gradle JDK).
+4. Start an emulator and click Run on the `app` configuration.
+
+CLI equivalents:
+
+```bash
+npm run android:gradle:debug
+npm run android:install:debug
+```
+
+## Quick Smoke Checklist
+
+Run this manual flow after major changes:
+
+1. Citizen login -> OTP verify -> Citizen dashboard loads
+2. Open AI Assistant -> send one message -> receive response
+3. Back to citizen dashboard -> verify appointments/applications sections render
+4. Logout -> LoginType screen appears
+5. Official login -> Official dashboard -> update one status action
+
+## Prototype Auth Notes
+
+- Development mode includes demo-friendly auth fallback behavior in src/api/auth.js.
+- This behavior is for prototype development only.
+
+## Next Planned Build Focus
+
+- Consolidated AI action layer (safe, explicit action mapping)
+- Citizen + Official feature parity for core service request lifecycle
+- Clean component structure for easy UI redesign later
